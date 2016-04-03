@@ -1,7 +1,5 @@
 package org.kirit.jdbcbenchmark;
 
-//mvn archetype:generate -DgroupId=org.kirit.jdbcbenchmark -DartifactId=JavaJDBCBenchmark -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
-
 
 import java.sql.*;
 import java.util.Properties;
@@ -40,15 +38,15 @@ public class JavaJDBCBenchmark {
         properties.put("user", USER);
         properties.put("password", PASSWORD);
         final String ConnString =  bRewriteBatchSt ? CONNECTION + "?rewriteBatchedStatements=true": CONNECTION;
-        System.out.println(ConnString);
         try (Connection conn = DriverManager.getConnection(ConnString, properties)) {
             executeSQL(conn, "USE test");
             //warmup
             executeSQL(conn, "INSERT INTO tbl (id, val) VALUES (null, 1)");
 
-            String query = String.format("INSERT INTO tbl (val) VALUES (?)");
+            String query = "INSERT INTO tbl (val) VALUES (?)";
             PreparedStatement statement = conn.prepareStatement(query);
 
+            System.out.println("Inserting " + nCount + " rows into table.");
             long startTime = System.nanoTime();
 
             for (int i = 1; i <= nCount; i++) {
